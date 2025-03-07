@@ -1,0 +1,1 @@
+HYDRA_FULL_ERROR=1 python train.py --config-name train.yaml env=reach frameskip=5 num_hist=1

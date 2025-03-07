@@ -11,17 +11,17 @@ from torchvision.utils import save_image
 from utils import slice_trajdict_with_t
 
 
-traj = torch.load("data/reach/rollout.pth")
-model_ckpt = torch.load("/home/yuxinchen/dino_wm/outputs/2025-02-18/18-59-30/checkpoints/model_21.pth")
-norm_params = torch.load("/home/yuxinchen/dino_wm/norm_params_reach.pth")
-traj_disturbed = torch.load("data/reach/rollout_disturbed_2.pth")
+traj = torch.load("/home/yuxin/Datasets/dp_rollouts/reach/rollout.pth")
+model_ckpt = torch.load("/home/yuxin/dino_wm/outputs/2025-02-26/18-10-38/checkpoints/model_71.pth")
+norm_params = torch.load("./norm_params_reach.pth")
+# traj_disturbed = torch.load("data/reach/rollout_disturbed_2.pth")
 
 
 save_image(traj['init_obs'][0] / 255, "init_obs.png", nrow=1, normalize=True, value_range=(0, 1))
 # save_image(traj['init_obs'][0] / 255, "init_obs_disturbed.png", nrow=1, normalize=True, value_range=(0, 1))
 
 
-init_obs = TF.resize(traj_disturbed['init_obs'], (224, 224)).unsqueeze(1).repeat(1, 3, 1, 1, 1).cuda() / 255 # shape [10, 3, 3, 224, 224], dtype torch.float32
+init_obs = TF.resize(traj['init_obs'], (224, 224)).unsqueeze(1).repeat(1, 3, 1, 1, 1).cuda() / 255 # shape [10, 3, 3, 224, 224], dtype torch.float32
 action = traj['action'][:,:,:3]
 
 
@@ -39,7 +39,7 @@ proprio = proprio.cuda()
 
 model = VWorldModel(
     image_size=224,
-    num_hist=3,
+    num_hist=1,
     num_pred=1,
     encoder=DinoV2Encoder(name="dinov2_vits14", feature_key="x_norm_patchtokens"),
     proprio_encoder=model_ckpt["proprio_encoder"],

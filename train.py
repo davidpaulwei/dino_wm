@@ -674,7 +674,6 @@ class Trainer:
                     self.cfg.frameskip
                 ]
             act = act[start : start + horizon * self.cfg.frameskip]
-            pdb.set_trace()
             act = rearrange(act, "(h f) d -> h (f d)", f=self.cfg.frameskip)
 
             obs_g = {}
@@ -691,8 +690,6 @@ class Trainer:
                     obs_0[k] = (
                         obs[k][:n_past].unsqueeze(0).to(self.device)
                     )  # unsqueeze for batch, (b, t, c, h, w)
-                torch.save(obs_0, "/home/yuxinchen/dino_wm/obs_0.pth")
-                torch.save(actions, "/home/yuxinchen/dino_wm/actions.pth")
                 z_obses, z = self.model.rollout(obs_0, actions)
                 z_obs_last = slice_trajdict_with_t(z_obses, start_idx=-1, end_idx=None)
                 div_loss = self.err_eval_single(z_obs_last, z_g)
@@ -710,7 +707,6 @@ class Trainer:
 
                 if self.cfg.has_decoder:
                     visuals = self.model.decode_obs(z_obses)[0]["visual"]
-                    pdb.set_trace()
                     imgs = torch.cat([obs["visual"], visuals[0].cpu()], dim=0)
                     self.plot_imgs(
                         imgs,

@@ -19,6 +19,7 @@ class ReachDataset(TrajDataset):
         normalize_action: bool = False,
         action_scale=1.0,
     ):
+        pdb.set_trace()
         self.data_path = Path(data_path)
         self.transform = transform
         self.normalize_action = normalize_action
@@ -129,6 +130,7 @@ def load_reach_slice_train_val(
     num_pred=0,
     frameskip=0,
 ):
+    pdb.set_trace()
     dset = ReachDataset(
         n_rollout=n_rollout,
         transform=transform,
