@@ -10,16 +10,15 @@ from typing import Optional, Callable, Any
 import pdb
 decord.bridge.set_bridge("torch")
 
-class ReachDataset(TrajDataset):
+class MovePepperDataset(TrajDataset):
     def __init__(
         self,
-        data_path: str = "data/reach",
+        data_path: str = "/home/yuxin/Datasets/dp_rollouts",
         n_rollout: Optional[int] = None,
         transform: Optional[Callable] = None,
         normalize_action: bool = False,
         action_scale=1.0,
     ):
-        pdb.set_trace()
         self.data_path = Path(data_path)
         self.transform = transform
         self.normalize_action = normalize_action
@@ -49,16 +48,16 @@ class ReachDataset(TrajDataset):
             self.action_mean, self.action_std = self.get_data_mean_std(self.actions, self.seq_lengths)
             self.state_mean, self.state_std = self.get_data_mean_std(self.states, self.seq_lengths)
             self.proprio_mean, self.proprio_std = self.get_data_mean_std(self.proprios, self.seq_lengths)
-            norm_params= {
-                "action_mean": self.action_mean,
-                "action_std": self.action_std,
-                "state_mean": self.state_mean,
-                "state_std": self.state_std,
-                "proprio_mean": self.proprio_mean,
-                "proprio_std": self.proprio_std
-            }
-            torch.save(norm_params, "/home/yuxinchen/dino_wm/norm_params_reach.pth")
-            pdb.set_trace()
+            # norm_params= {
+            #     "action_mean": self.action_mean,
+            #     "action_std": self.action_std,
+            #     "state_mean": self.state_mean,
+            #     "state_std": self.state_std,
+            #     "proprio_mean": self.proprio_mean,
+            #     "proprio_std": self.proprio_std
+            # }
+            # torch.save(norm_params, "/home/yuxin/dino_wm/norm_params_move_pepper.pth")
+            # pdb.set_trace()
         else:
             self.action_mean = torch.zeros(self.action_dim)
             self.action_std = torch.ones(self.action_dim)
@@ -120,18 +119,17 @@ class ReachDataset(TrajDataset):
         elif isinstance(imgs, torch.Tensor):
             return rearrange(imgs, "b h w c -> b c h w") / 255.0
         
-def load_reach_slice_train_val(
+def load_move_pepper_slice_train_val(
     transform,
     n_rollout=50,
-    data_path='data/reach_dset',
+    data_path='/home/yuxin/Datasets/dp_rollouts/move_pepper_apr1',
     normalize_action=False,
     split_ratio=0.8,
     num_hist=0,
     num_pred=0,
     frameskip=0,
 ):
-    pdb.set_trace()
-    dset = ReachDataset(
+    dset = MovePepperDataset(
         n_rollout=n_rollout,
         transform=transform,
         data_path=data_path,
